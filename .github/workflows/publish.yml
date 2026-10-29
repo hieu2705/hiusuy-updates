@@ -1,0 +1,115 @@
+name: Publish hiusuy Pro update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'release/**'
+      - 'RELEASE_NOTES.md'
+      - '.github/workflows/publish.yml'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: hiusuy-release-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out release files
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Verify payload and first-update package
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import re
+          import stat
+          import zipfile
+
+          root = Path('release')
+          manifest_file = root / 'latest.json'
+          if manifest_file.stat().st_size > 65536:
+              raise ValueError('Update manifest exceeds 64 KiB')
+          manifest = json.loads(manifest_file.read_text(encoding='utf-8-sig'))
+          if not isinstance(manifest, dict):
+              raise ValueError('Update manifest must be an object')
+          version = manifest.get('version')
+          if not isinstance(version, str) or not re.fullmatch(r'[0-9]{1,8}\.[0-9]{1,8}\.[0-9]{1,8}', version):
+              raise ValueError('Version must be a stable x.y.z number')
+          for field in ('sha256', 'runtimeSha256'):
+              if not isinstance(manifest.get(field), str) or not re.fullmatch(r'[0-9a-f]{64}', manifest[field]):
+                  raise ValueError('Invalid SHA-256 field: ' + field)
+          if type(manifest.get('size')) is not int or not 0 < manifest['size'] <= 100 * 1024 * 1024:
+              raise ValueError('Invalid application archive size')
+          repository = os.environ['GITHUB_REPOSITORY']
+          expected_url = f'https://github.com/{repository}/releases/download/v{version}/app.asar'
+          if manifest.get('url') != expected_url:
+              raise ValueError('Manifest URL must point to this repository and version')
+
+          payload_file = root / 'app.asar'
+          if payload_file.stat().st_size != manifest['size']:
+              raise ValueError('Application archive size differs from manifest')
+          payload = payload_file.read_bytes()
+          if hashlib.sha256(payload).hexdigest() != manifest['sha256']:
+              raise ValueError('Application archive SHA-256 differs from manifest')
+
+          bootstrap_name = f'hiusuy-Pro-{version}-Cap-nhat-lan-dau.zip'
+          expected_members = {
+              'Cap_nhat.cmd', 'bootstrap.ps1', 'HUONG_DAN.txt',
+              'payload/app.asar', 'payload/manifest.json', 'payload/apply-update.ps1'
+          }
+          with zipfile.ZipFile(root / bootstrap_name) as package:
+              entries = package.infolist()
+              names = [entry.filename for entry in entries]
+              if len(names) != len(expected_members) or set(names) != expected_members:
+                  raise ValueError('First-update ZIP contains unexpected or duplicate entries')
+              for entry in entries:
+                  limit = manifest['size'] if entry.filename == 'payload/app.asar' else 1024 * 1024
+                  if entry.file_size > limit or stat.S_ISLNK(entry.external_attr >> 16):
+                      raise ValueError('Unsafe ZIP member: ' + entry.filename)
+              if package.testzip() is not None:
+                  raise ValueError('First-update ZIP integrity check failed')
+              if package.read('payload/app.asar') != payload:
+                  raise ValueError('First-update ZIP contains a different application archive')
+              inner_manifest = json.loads(package.read('payload/manifest.json').decode('utf-8-sig'))
+              if inner_manifest != manifest:
+                  raise ValueError('First-update ZIP contains a different update manifest')
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'version={version}\ntag=v{version}\nbootstrap={bootstrap_name}\n')
+          print(f'Verified hiusuy Pro {version}: payload, manifest and first-update ZIP match')
+          PY
+
+      - name: Upload and publish the verified release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ steps.verify.outputs.version }}
+          TAG: ${{ steps.verify.outputs.tag }}
+          BOOTSTRAP: ${{ steps.verify.outputs.bootstrap }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --draft --target "$GITHUB_SHA" \
+              --title "hiusuy Pro $VERSION" --notes-file RELEASE_NOTES.md
+          fi
+          gh release upload "$TAG" release/app.asar release/latest.json "release/$BOOTSTRAP" --clobber
+          gh release edit "$TAG" --title "hiusuy Pro $VERSION" \
+            --notes-file RELEASE_NOTES.md --draft=false --latest
+
