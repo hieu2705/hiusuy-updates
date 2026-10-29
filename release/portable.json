@@ -1,0 +1,157 @@
+{
+  "name": "hiusuy-Pro-2.2.6-Windows-portable.zip",
+  "size": 183721018,
+  "sha256": "46b34b6f4dd10da0cedf81bd21e2b27eed3aab9e367d5c682fed23911d1c79f2",
+  "parts": [
+    {
+      "path": "portable-parts/000.bin",
+      "size": 6291456,
+      "sha256": "861f781cdc471bd36a3233ac795dcc32e8ca2fb63c343fe8aa59b335958ef78a"
+    },
+    {
+      "path": "portable-parts/001.bin",
+      "size": 6291456,
+      "sha256": "86dfb8384797d17ea41725f40b8492c4ce914b8656d6c92c6ed4e64c05fc970b"
+    },
+    {
+      "path": "portable-parts/002.bin",
+      "size": 6291456,
+      "sha256": "61a825c3940d9c21f16da1826c9a7edfa9833b0ccefecbce8a6c604ad5db1551"
+    },
+    {
+      "path": "portable-parts/003.bin",
+      "size": 6291456,
+      "sha256": "16f7fe0bbabb55ac22e727224163338b419a62911d4e14b2efa01be6f3ce57ec"
+    },
+    {
+      "path": "portable-parts/004.bin",
+      "size": 6291456,
+      "sha256": "14ab10e34288b87c6929acc40d55336d3069598a58686dd795f8d1374a7ccd98"
+    },
+    {
+      "path": "portable-parts/005.bin",
+      "size": 6291456,
+      "sha256": "af407d8626abe47be9a8a7404d0bf3926f8afdd61fc2acb3010362726bbf1afa"
+    },
+    {
+      "path": "portable-parts/006.bin",
+      "size": 6291456,
+      "sha256": "7ee99cd6e6e13e91a86fd0fc231347139ec405e937592606939b54d8a78185d5"
+    },
+    {
+      "path": "portable-parts/007.bin",
+      "size": 6291456,
+      "sha256": "fc27141aa693c0d9540e311ad4d3f39e1b57ffe5ac81452d139fce55d82cfaa8"
+    },
+    {
+      "path": "portable-parts/008.bin",
+      "size": 6291456,
+      "sha256": "2f3a13ed368cfdb4e6616aa80389d2b0ce1396566a98ca566dce11eb448c17a9"
+    },
+    {
+      "path": "portable-parts/009.bin",
+      "size": 6291456,
+      "sha256": "0b9a8b16a1b1f1a40331c3574be2714b1fb3064c19f971ec76cf99672d9cb94c"
+    },
+    {
+      "path": "portable-parts/010.bin",
+      "size": 6291456,
+      "sha256": "65eb16c9c650c99a2fc5750c3c205ddfb7479ad3d38d3b29f21d170d8d80a2a2"
+    },
+    {
+      "path": "portable-parts/011.bin",
+      "size": 6291456,
+      "sha256": "c83dfbad9397fe2fec6022b8dcd96f6ec0b86ad03756834ca64df8616fc4f132"
+    },
+    {
+      "path": "portable-parts/012.bin",
+      "size": 6291456,
+      "sha256": "ffd20babd024522a97e0003c7582c42ac69a2730969148ef77f5e422b6dd67ee"
+    },
+    {
+      "path": "portable-parts/013.bin",
+      "size": 6291456,
+      "sha256": "433692cd330ee9d7d905128adc1ab5569e85d4cbd9d6b0642436924673018567"
+    },
+    {
+      "path": "portable-parts/014.bin",
+      "size": 6291456,
+      "sha256": "751067801f4d68738b39e6a3384d6c74416650b80dad24717ae7e436423b136c"
+    },
+    {
+      "path": "portable-parts/015.bin",
+      "size": 6291456,
+      "sha256": "8dc222f81439ef97af94fa197c72854c274fcc5eda0036a4943132aa9e180c5a"
+    },
+    {
+      "path": "portable-parts/016.bin",
+      "size": 6291456,
+      "sha256": "169dcaf4c617e8c13f7c9e057571c8237fa1cf454238138b79076c80b4b030c8"
+    },
+    {
+      "path": "portable-parts/017.bin",
+      "size": 6291456,
+      "sha256": "b87beaf22615cd989d0bcc9bcb79eb2b797decb2e309eb1341b284e9fec804a7"
+    },
+    {
+      "path": "portable-parts/018.bin",
+      "size": 6291456,
+      "sha256": "f58956757d4a31126274517fd4e438cf21a9147d7ad9092708f4119aa329e00a"
+    },
+    {
+      "path": "portable-parts/019.bin",
+      "size": 6291456,
+      "sha256": "c5c6a7644164bc428d9e0b6896d11a7e533a5679fc0f5bff1b48676753db273f"
+    },
+    {
+      "path": "portable-parts/020.bin",
+      "size": 6291456,
+      "sha256": "459dd00a37c2e1fe4f67f63f18a34b27b0a92edccd6ea0a07d9364d11f8e8da4"
+    },
+    {
+      "path": "portable-parts/021.bin",
+      "size": 6291456,
+      "sha256": "16b96a892bd7d66e5c1b39480b35ea6f267e1edd42c60667899c20ae14e8a01c"
+    },
+    {
+      "path": "portable-parts/022.bin",
+      "size": 6291456,
+      "sha256": "3f7a9e0f62e359a2da78845086cc280f83355be972951e17f83558e89ebf31af"
+    },
+    {
+      "path": "portable-parts/023.bin",
+      "size": 6291456,
+      "sha256": "872957e9f7d3e18165b82ee52b838db07f2a2f49aec411fdd5520632823bd75b"
+    },
+    {
+      "path": "portable-parts/024.bin",
+      "size": 6291456,
+      "sha256": "eb05d8b6f32045b7f0833f26b0c97230a300554fe7bb73778208422d07a64a2d"
+    },
+    {
+      "path": "portable-parts/025.bin",
+      "size": 6291456,
+      "sha256": "ffc524502c46a246ee86bf9298303685bd4c775a7af1165a2e5e1608d9d2b5b9"
+    },
+    {
+      "path": "portable-parts/026.bin",
+      "size": 6291456,
+      "sha256": "23ee4b0cf46c42707b2021b832ec566d99459932063e5778b96d330a4b2cfdc7"
+    },
+    {
+      "path": "portable-parts/027.bin",
+      "size": 6291456,
+      "sha256": "8ba8db86ca07abd308d017387c29eae26b2c46aa960945f007b83a9146ad6d83"
+    },
+    {
+      "path": "portable-parts/028.bin",
+      "size": 6291456,
+      "sha256": "ed52c657208341cae515d62eaee08dd59e42123ef2f98682536e2d28635bea09"
+    },
+    {
+      "path": "portable-parts/029.bin",
+      "size": 1268794,
+      "sha256": "51bca699d56f5b8f98b7e7a63600c6c74720942417b12d4a72af6060f4a99ce9"
+    }
+  ]
+}

@@ -36,7 +36,7 @@ jobs:
           import hashlib
           import json
           import os
-          from pathlib import Path
+          from pathlib import Path, PurePosixPath
           import re
           import stat
           import zipfile
@@ -90,8 +90,99 @@ jobs:
               if inner_manifest != manifest:
                   raise ValueError('First-update ZIP contains a different update manifest')
 
+          portable_name = ''
+          portable_manifest_file = root / 'portable.json'
+          if portable_manifest_file.exists():
+              if portable_manifest_file.is_symlink() or portable_manifest_file.stat().st_size > 65536:
+                  raise ValueError('Unsafe portable manifest')
+              portable = json.loads(portable_manifest_file.read_text(encoding='utf-8-sig'))
+              expected_name = f'hiusuy-Pro-{version}-Windows-portable.zip'
+              if not isinstance(portable, dict) or portable.get('name') != expected_name:
+                  raise ValueError('Portable filename must match the release version')
+              if type(portable.get('size')) is not int or not 0 < portable['size'] <= 1024 * 1024 * 1024:
+                  raise ValueError('Invalid portable archive size')
+              if not isinstance(portable.get('sha256'), str) or not re.fullmatch(r'[0-9a-f]{64}', portable['sha256']):
+                  raise ValueError('Invalid portable archive SHA-256')
+              parts = portable.get('parts')
+              if not isinstance(parts, list) or not 0 < len(parts) <= 1000:
+                  raise ValueError('Invalid portable part list')
+              seen_parts = set()
+              portable_file = root / expected_name
+              if portable_file.exists() or portable_file.is_symlink():
+                  raise ValueError('Portable output path already exists')
+              whole_hash = hashlib.sha256()
+              whole_size = 0
+              with portable_file.open('xb') as assembled:
+                  for part in parts:
+                      if not isinstance(part, dict):
+                          raise ValueError('Invalid portable part')
+                      part_name = part.get('path')
+                      if not isinstance(part_name, str) or not re.fullmatch(r'portable-parts/[0-9]{3,4}\.bin', part_name):
+                          raise ValueError('Portable part path is not allowed')
+                      if part_name in seen_parts:
+                          raise ValueError('Duplicate portable part')
+                      seen_parts.add(part_name)
+                      if type(part.get('size')) is not int or not 0 < part['size'] <= portable['size']:
+                          raise ValueError('Invalid portable part size')
+                      if not isinstance(part.get('sha256'), str) or not re.fullmatch(r'[0-9a-f]{64}', part['sha256']):
+                          raise ValueError('Invalid portable part SHA-256')
+                      part_file = root / part_name
+                      for candidate in (root, part_file.parent, part_file):
+                          attributes = getattr(candidate.lstat(), 'st_file_attributes', 0)
+                          if candidate.is_symlink() or attributes & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 0):
+                              raise ValueError('Linked portable paths are not allowed')
+                      if not part_file.is_file() or part_file.stat().st_size != part['size']:
+                          raise ValueError('Portable part size differs from manifest')
+                      part_hash = hashlib.sha256()
+                      part_size = 0
+                      with part_file.open('rb') as source:
+                          while chunk := source.read(1024 * 1024):
+                              part_size += len(chunk)
+                              whole_size += len(chunk)
+                              if part_size > part['size'] or whole_size > portable['size']:
+                                  raise ValueError('Portable bytes exceed declared size')
+                              part_hash.update(chunk)
+                              whole_hash.update(chunk)
+                              assembled.write(chunk)
+                      if part_size != part['size'] or part_hash.hexdigest() != part['sha256']:
+                          raise ValueError('Portable part verification failed')
+              if whole_size != portable['size'] or whole_hash.hexdigest() != portable['sha256']:
+                  raise ValueError('Portable archive verification failed')
+              with zipfile.ZipFile(portable_file) as package:
+                  entries = package.infolist()
+                  names = [entry.filename for entry in entries]
+                  required = {
+                      'hiusuy Pro.exe', 'resources/app.asar',
+                      'resources/app.asar.unpacked/node_modules/ffmpeg-static/ffmpeg.exe',
+                      'resources/app.asar.unpacked/node_modules/ffprobe-static/bin/win32/x64/ffprobe.exe'
+                  }
+                  if len(names) != len(set(names)) or not required.issubset(names):
+                      raise ValueError('Portable archive is missing application files or has duplicate entries')
+                  if sum(entry.file_size for entry in entries) > 2 * 1024 * 1024 * 1024:
+                      raise ValueError('Portable archive expands beyond the size limit')
+                  forbidden = {'update-backups', 'profile', 'profiles', 'userdata', 'appdata'}
+                  for entry in entries:
+                      name = entry.filename
+                      parsed = PurePosixPath(name)
+                      if '\\' in name or parsed.is_absolute() or '..' in parsed.parts or stat.S_ISLNK(entry.external_attr >> 16):
+                          raise ValueError('Unsafe portable ZIP entry')
+                      if any(part.lower() in forbidden or part.lower().startswith('preview-profile') for part in parsed.parts):
+                          raise ValueError('Portable archive contains user data or update backups')
+                  if package.testzip() is not None:
+                      raise ValueError('Portable ZIP integrity check failed')
+                  if package.read('resources/app.asar') != payload:
+                      raise ValueError('Portable archive contains a different application archive')
+                  runtime_hash = hashlib.sha256()
+                  with package.open('hiusuy Pro.exe') as executable:
+                      while chunk := executable.read(1024 * 1024):
+                          runtime_hash.update(chunk)
+                  if runtime_hash.hexdigest() != manifest['runtimeSha256']:
+                      raise ValueError('Portable executable differs from the supported runtime')
+              portable_name = expected_name
+              print(f'Verified full portable archive: {portable_name}')
+
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
-              output.write(f'version={version}\ntag=v{version}\nbootstrap={bootstrap_name}\n')
+              output.write(f'version={version}\ntag=v{version}\nbootstrap={bootstrap_name}\nportable={portable_name}\n')
           print(f'Verified hiusuy Pro {version}: payload, manifest and first-update ZIP match')
           PY
 
@@ -103,13 +194,18 @@ jobs:
           VERSION: ${{ steps.verify.outputs.version }}
           TAG: ${{ steps.verify.outputs.tag }}
           BOOTSTRAP: ${{ steps.verify.outputs.bootstrap }}
+          PORTABLE: ${{ steps.verify.outputs.portable }}
         run: |
           set -euo pipefail
           if ! gh release view "$TAG" >/dev/null 2>&1; then
             gh release create "$TAG" --draft --target "$GITHUB_SHA" \
               --title "hiusuy Pro $VERSION" --notes-file RELEASE_NOTES.md
           fi
-          gh release upload "$TAG" release/app.asar release/latest.json "release/$BOOTSTRAP" --clobber
+          assets=(release/app.asar release/latest.json "release/$BOOTSTRAP")
+          if [[ -n "$PORTABLE" ]]; then
+            assets+=("release/$PORTABLE")
+          fi
+          gh release upload "$TAG" "${assets[@]}" --clobber
           gh release edit "$TAG" --title "hiusuy Pro $VERSION" \
             --notes-file RELEASE_NOTES.md --draft=false --latest
 
