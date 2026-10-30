@@ -97,7 +97,11 @@ jobs:
                   raise ValueError('Unsafe portable manifest')
               portable = json.loads(portable_manifest_file.read_text(encoding='utf-8-sig'))
               expected_name = f'hiusuy-Pro-{version}-Windows-portable.zip'
-              if not isinstance(portable, dict) or portable.get('name') != expected_name:
+              base_version = portable.get('baseVersion') if isinstance(portable, dict) else None
+              if base_version is not None and (not isinstance(base_version,str) or not re.fullmatch(r'[0-9]{1,8}\.[0-9]{1,8}\.[0-9]{1,8}',base_version)):
+                  raise ValueError('Invalid portable base version')
+              source_name = f'hiusuy-Pro-{base_version}-Windows-portable.zip' if base_version else expected_name
+              if not isinstance(portable, dict) or portable.get('name') != source_name:
                   raise ValueError('Portable filename must match the release version')
               if type(portable.get('size')) is not int or not 0 < portable['size'] <= 1024 * 1024 * 1024:
                   raise ValueError('Invalid portable archive size')
@@ -107,7 +111,7 @@ jobs:
               if not isinstance(parts, list) or not 0 < len(parts) <= 1000:
                   raise ValueError('Invalid portable part list')
               seen_parts = set()
-              portable_file = root / expected_name
+              portable_file = root / ('portable-base.zip' if base_version else expected_name)
               if portable_file.exists() or portable_file.is_symlink():
                   raise ValueError('Portable output path already exists')
               whole_hash = hashlib.sha256()
@@ -148,6 +152,13 @@ jobs:
                           raise ValueError('Portable part verification failed')
               if whole_size != portable['size'] or whole_hash.hexdigest() != portable['sha256']:
                   raise ValueError('Portable archive verification failed')
+              if base_version:
+                  rebuilt = root / expected_name
+                  with zipfile.ZipFile(portable_file) as source, zipfile.ZipFile(rebuilt,'w',zipfile.ZIP_DEFLATED,compresslevel=1) as target:
+                      for info in source.infolist():
+                          data = payload if info.filename == 'resources/app.asar' else (Path('HUONG_DAN.txt').read_bytes() if info.filename == 'HUONG_DAN_CAP_NHAT.txt' else source.read(info.filename))
+                          target.writestr(info,data,compress_type=zipfile.ZIP_DEFLATED,compresslevel=1)
+                  portable_file = rebuilt
               with zipfile.ZipFile(portable_file) as package:
                   entries = package.infolist()
                   names = [entry.filename for entry in entries]

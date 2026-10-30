@@ -1,20 +1,16 @@
-hiusuy Pro 2.2.6 thêm thanh đầu phát xanh trên timeline và cập nhật qua mạng từ GitHub Releases. Phần xử lý clip, phụ đề và xuất video được giữ nguyên.
+hiusuy Pro 2.3.0 thêm **Dựng tự động** để bỏ khoảng lặng trong video hoặc voice.
 
-Máy mới hoặc muốn tải ứng dụng đầy đủ:
+1. Nhập file vào Project, bấm **Dựng tự động** trên thanh trên cùng.
+2. Chọn nguồn, chỉnh ngưỡng âm thanh, độ dài khoảng lặng và phần đệm.
+3. Bấm **Phân tích** để xem thời lượng giữ lại và danh sách đoạn có tiếng.
+4. Bấm **Tạo sequence mới**. Hình và tiếng được cắt cùng mốc; sequence cũ và file nguồn được giữ nguyên.
 
-1. Tải **hiusuy-Pro-2.2.6-Windows-portable.zip** và giải nén toàn bộ vào một thư mục riêng.
-2. Mở **hiusuy Pro.exe** trong thư mục vừa giải nén.
+Có nút hủy phân tích và marker ở mỗi đoạn. Kế hoạch chỉ được áp dụng nếu nguồn và sequence vẫn khớp lúc phân tích. Đây là tính năng phân tích âm thanh cục bộ bằng FFmpeg; chưa có trợ lý AI chat hoặc kết nối MCP trong bản này.
 
-Bản đầy đủ đã có thanh timeline và chức năng cập nhật qua mạng. Không cần xóa thư mục bản cũ.
+**Máy đã có 2.2.6:** mở Cập nhật, bấm Kiểm tra ngay; tải xong chọn Lưu dự án và khởi động lại.
 
-Máy đã có bản cũ tương thích:
+**Máy mới:** tải hiusuy-Pro-2.3.0-Windows-portable.zip, giải nén toàn bộ rồi mở hiusuy Pro.exe.
 
-1. Tải **hiusuy-Pro-2.2.6-Cap-nhat-lan-dau.zip** và giải nén toàn bộ.
-2. Lưu dự án, chờ tác vụ đang chạy xong rồi đóng hiusuy Pro.
-3. Mở **Cap_nhat.cmd**, chọn **hiusuy Pro.exe** đang dùng.
+**Bản cũ chưa có cập nhật online:** tải hiusuy-Pro-2.3.0-Cap-nhat-lan-dau.zip, lưu dự án và đóng ứng dụng; giải nén rồi mở Cap_nhat.cmd, chọn exe đang dùng. Bộ cập nhật kiểm tra bộ chạy và sao lưu bản cũ.
 
-Bộ cập nhật kiểm tra bộ chạy và sao lưu bản ứng dụng cũ trước khi thay. Dự án, cài đặt, phím tắt và bộ nhận diện/model được giữ nguyên. Nếu bộ chạy không tương thích, bộ cập nhật sẽ dừng; dùng gói **hiusuy-Pro-2.2.6-Windows-portable.zip** ở trên.
-
-Sau lần cập nhật đầu, ứng dụng tự kiểm tra và tải bản mới tương thích. Bấm **Lưu dự án và khởi động lại** để áp dụng khi không có tác vụ render hoặc phụ đề đang chạy. Bản cũ nằm trong thư mục `update-backups` cạnh ứng dụng.
-
-`app.asar` và `latest.json` dành cho bộ cập nhật tự động, không cần mở hoặc chép bằng tay.
+Nguồn tham khảo ý tưởng: https://viblo.asia/p/tu-dong-hoa-dung-video-tren-premiere-pro-bang-ai-extendscript-cepuxp-va-mcp-tu-goc-nhin-developer-1QLxnmAO4Aw
