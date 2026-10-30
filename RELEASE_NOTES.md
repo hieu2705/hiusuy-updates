@@ -1,16 +1,20 @@
-hiusuy Pro 2.3.0 thêm **Dựng tự động** để bỏ khoảng lặng trong video hoặc voice.
+## hiusuy Pro 2.4.0
 
-1. Nhập file vào Project, bấm **Dựng tự động** trên thanh trên cùng.
-2. Chọn nguồn, chỉnh ngưỡng âm thanh, độ dài khoảng lặng và phần đệm.
-3. Bấm **Phân tích** để xem thời lượng giữ lại và danh sách đoạn có tiếng.
-4. Bấm **Tạo sequence mới**. Hình và tiếng được cắt cùng mốc; sequence cũ và file nguồn được giữ nguyên.
+- Render tự đo trên source và sub thực tế; dùng CPU/GPU phù hợp, chuyển CPU khi GPU lỗi. Không thay file xuất cũ nếu tác vụ lỗi hoặc bị hủy.
+- Nhập source mặc định ở 00; kéo thả vào timeline đặt đúng vị trí thả, kể cả khi đang cuộn.
+- Tự tìm voice để khớp TXT/SRT/VTT giữa nhiều đoạn audio, có tính vị trí, phần cắt và tốc độ. Chờ khi tác vụ nhận diện đang bận; giữ sub khi chưa đủ độ chắc chắn.
+- Thêm **Công cụ dựng**: bản xem nhẹ 640/960 pixel, xem trước và dồn khoảng trống chung, giữ tối đa 40 phiên bản dự án.
+- Bản xem nhẹ chỉ dùng trong Program. Xuất video, âm thanh và nhận diện vẫn dùng source gốc.
+- Mã nhận diện đi cùng bản cập nhật, giữ model và cài đặt đang có.
 
-Có nút hủy phân tích và marker ở mỗi đoạn. Kế hoạch chỉ được áp dụng nếu nguồn và sequence vẫn khớp lúc phân tích. Đây là tính năng phân tích âm thanh cục bộ bằng FFmpeg; chưa có trợ lý AI chat hoặc kết nối MCP trong bản này.
+### Tải gói phù hợp
 
-**Máy đã có 2.2.6:** mở Cập nhật, bấm Kiểm tra ngay; tải xong chọn Lưu dự án và khởi động lại.
+- **Windows-portable.zip**: app đầy đủ cho máy mới.
+- **Cap-nhat-lan-dau.zip**: thêm cập nhật online cho bản cũ. Giải nén toàn bộ và mở Cap_nhat.cmd.
+- Máy đã có cập nhật online: mở nút **Cập nhật**, chờ tải, lưu dự án và khởi động lại.
 
-**Máy mới:** tải hiusuy-Pro-2.3.0-Windows-portable.zip, giải nén toàn bộ rồi mở hiusuy Pro.exe.
+### Kiểm tra
 
-**Bản cũ chưa có cập nhật online:** tải hiusuy-Pro-2.3.0-Cap-nhat-lan-dau.zip, lưu dự án và đóng ứng dụng; giải nén rồi mở Cap_nhat.cmd, chọn exe đang dùng. Bộ cập nhật kiểm tra bộ chạy và sao lưu bản cũ.
+Đã kiểm tra proxy, cache hỏng, hủy tác vụ, dồn video/voice/sub cùng nhau, hoàn tác, track khóa, mở bản lưu, kéo thả, dựng tự động, hàng đợi và render dự phòng CPU.
 
-Nguồn tham khảo ý tưởng: https://viblo.asia/p/tu-dong-hoa-dung-video-tren-premiere-pro-bang-ai-extendscript-cepuxp-va-mcp-tu-goc-nhin-developer-1QLxnmAO4Aw
+Video thử 30 phút, 1080p/30fps, 360 câu sub: **3 phút 42 giây** trên i5-12400F và RTX 2060 SUPER. Đây là số đo của máy thử, không bảo đảm thời gian trên máy khác. Chưa kiểm tra trực tiếp GPU AMD/Intel hoặc máy RAM thấp. Bộ nhận diện cần model cài trong Preferences.

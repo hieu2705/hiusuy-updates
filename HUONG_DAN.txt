@@ -1,16 +1,12 @@
-hiusuy Pro 2.3.0 thêm **Dựng tự động** để bỏ khoảng lặng trong video hoặc voice.
+hiusuy Pro 2.4.0
 
-1. Nhập file vào Project, bấm **Dựng tự động** trên thanh trên cùng.
-2. Chọn nguồn, chỉnh ngưỡng âm thanh, độ dài khoảng lặng và phần đệm.
-3. Bấm **Phân tích** để xem thời lượng giữ lại và danh sách đoạn có tiếng.
-4. Bấm **Tạo sequence mới**. Hình và tiếng được cắt cùng mốc; sequence cũ và file nguồn được giữ nguyên.
+Máy đã dùng bản có nút Cập nhật: mở app, bấm Cập nhật và chờ tải. Lưu dự án rồi chọn khởi động lại để áp dụng.
+Máy dùng bản cũ chưa có cập nhật online: tải gói Cap-nhat-lan-dau.zip, giải nén toàn bộ, mở Cap_nhat.cmd rồi chọn hiusuy Pro.exe đang dùng. Bộ cập nhật kiểm tra bộ chạy và sao lưu bản app cũ.
+Máy mới: tải Windows-portable.zip, giải nén toàn bộ rồi mở hiusuy Pro.exe. Giữ nguyên thư mục resources.
 
-Có nút hủy phân tích và marker ở mỗi đoạn. Kế hoạch chỉ được áp dụng nếu nguồn và sequence vẫn khớp lúc phân tích. Đây là tính năng phân tích âm thanh cục bộ bằng FFmpeg; chưa có trợ lý AI chat hoặc kết nối MCP trong bản này.
-
-**Máy đã có 2.2.6:** mở Cập nhật, bấm Kiểm tra ngay; tải xong chọn Lưu dự án và khởi động lại.
-
-**Máy mới:** tải hiusuy-Pro-2.3.0-Windows-portable.zip, giải nén toàn bộ rồi mở hiusuy Pro.exe.
-
-**Bản cũ chưa có cập nhật online:** tải hiusuy-Pro-2.3.0-Cap-nhat-lan-dau.zip, lưu dự án và đóng ứng dụng; giải nén rồi mở Cap_nhat.cmd, chọn exe đang dùng. Bộ cập nhật kiểm tra bộ chạy và sao lưu bản cũ.
-
-Nguồn tham khảo ý tưởng: https://viblo.asia/p/tu-dong-hoa-dung-video-tren-premiere-pro-bang-ai-extendscript-cepuxp-va-mcp-tu-goc-nhin-developer-1QLxnmAO4Aw
+CPU + GPU tự động tự đo dự án và chuyển CPU khi GPU không chạy được.
+Nhập source mặc định từ 00; kéo vào timeline thì đặt tại điểm thả.
+Phụ đề TXT/SRT/VTT có thể tự tìm voice. Bộ nhận diện cần model đã cài trong Preferences; giữ lại model khi cập nhật.
+Công cụ dựng: tạo bản xem nhẹ 640/960 pixel, tìm/dồn khoảng trống chung và mở các phiên bản dự án đã lưu.
+Khi xuất vẫn dùng source gốc. Bản lưu dự án không sao chép source.
+Tốc độ phụ thuộc cấu hình và dự án. Thử nghiệm 30 phút 1080p30 với 360 câu sub: 3 phút 42 giây trên i5-12400F, RTX 2060 SUPER.

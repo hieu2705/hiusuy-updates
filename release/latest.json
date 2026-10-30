@@ -1,7 +1,7 @@
 {
-  "version": "2.3.0",
-  "url": "https://github.com/hieu2705/hiusuy-updates/releases/download/v2.3.0/app.asar",
-  "sha256": "cc8239b15d4ad58bff55c66c6b064b555c9bc52dfedc6838cda1ca4153e68404",
-  "size": 1172467,
+  "version": "2.4.0",
+  "url": "https://github.com/hieu2705/hiusuy-updates/releases/download/v2.4.0/app.asar",
+  "sha256": "55a814d148a8d14e1abbe15745ec229175bdddfb4c2156b3d31273cc93b00b40",
+  "size": 1252688,
   "runtimeSha256": "28d4e67697489935c4f0f956f381b651b65c4202d51d0c886bb62798ed7ce603"
 }
